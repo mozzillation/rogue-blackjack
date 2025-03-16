@@ -1,26 +1,59 @@
 @import 'tailwindcss';
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    --background: #1e1e1e;
+    --foreground: #fff;
+    --white: #fff;
+
+    --accent: oklch(94.83% 0.0769 115.71);
 }
 
 @theme inline {
+    --color-white: var(--white);
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
+
+    --color-accent: var(--accent);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+html,
+body {
+    height: 100%;
 }
 
 body {
     background: var(--background);
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
+    image-rendering: pixelated;
+}
+
+/* CRT Effect */
+
+.crt {
+    /* scanlines */
+    background: linear-gradient(to top, #555, #111, #111, #555);
+    background-size: cover;
+    background-size: 100% 4px;
+
+    /* retro stuff */
+    text-shadow: 0 0 10px #000;
+    mix-blend-mode: soft-light;
+    opacity: 1;
+}
+
+@media screen {
+    .crt {
+        animation: scanlines infinite 0.5s linear;
+    }
+}
+@keyframes scanlines {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 0 4px;
+    }
 }
