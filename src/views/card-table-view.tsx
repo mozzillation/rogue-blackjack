@@ -36,7 +36,7 @@ const CardTableView = () => {
             exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
                 layout
-                className={`relative flex flex-row gap-4 w-full items-center content-center justify-center grow bg-zinc-700 rounded-xs`}>
+                className={`relative flex flex-row gap-4 w-full items-center content-center justify-center grow to-zinc-700  from-zinc-600 bg-gradient-to-t rounded-sm`}>
                 <AnimatePresence mode="popLayout">
                     {level.dealer.hand.map((card, index) => (
                         <Card key={index} card={card} isHidden={isPlayerTurn && index === 1} />

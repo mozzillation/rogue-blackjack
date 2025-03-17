@@ -25,7 +25,7 @@ const EnemyIntroView = () => {
             animate={{ opacity: 1, y: 0, transition: screenSpringOptions }}
             exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
-                className={`to-zinc-700  from-zinc-600 border-zinc-700 border-2 bg-gradient-to-t overflow-hidden w-full h-full flex flex-col items-center content-center justify-center rounded-sm`}>
+                className={`to-zinc-700  from-zinc-600 bg-gradient-to-t overflow-hidden w-full h-full flex flex-col items-center content-center justify-center rounded-sm`}>
                 <motion.div
                     className={`uppercase tracking-wide text-lg w-full h-fit absolute top-0 left-0 p-4 opacity-50 leading-none`}>
                     LEVEL #{index}
