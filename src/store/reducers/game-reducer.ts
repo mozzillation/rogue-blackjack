@@ -120,7 +120,8 @@ const gameReducer = (
                 if (player.score === 21) {
                     // Blackjack → Instant win
                     draft.level.status = levelStatus.WON
-                    draft.player.coins += 1
+                    draft.player.coins += 3
+                    draft.player.health += 3
                     draft.history.outcomes.push(logOutcome(draft))
                 } else if (player.score > 21) {
                     // Player busts → Lose

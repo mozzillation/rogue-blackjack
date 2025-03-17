@@ -13,7 +13,7 @@ import { useTransition } from 'react'
 const GameOverView = () => {
     const {
         seed,
-        level: { index },
+        history: { outcomes },
     } = useAppSelector((state) => state.game)
 
     const dispatch = useAppDispatch()
@@ -61,7 +61,7 @@ const GameOverView = () => {
                     className={`bg-rose-300 text-black text-xl p-2 rounded-xs border-2 border-black outline outline-rose-300/50 w-fit animate-pulse tracking-wider`}>
                     GAME OVER
                 </motion.h1>
-                <div>You reached level #{index}</div>
+                <div>You reached level #{outcomes.length}</div>
                 <div className={`flex flex-col items-center content-center opacity-50`}>
                     {/* <div>Your score: {latestOutcome?.playerScore}</div>
                     <div>

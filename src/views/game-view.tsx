@@ -38,7 +38,7 @@ const GameView: React.FC<GameViewProps> = ({ seed }) => {
     return (
         <motion.div className="w-full h-full flex flex-col p-2 gap-4" layout>
             <AnimatePresence mode="popLayout">
-                {status !== 'game-over' && <StatusBar />}
+                {status !== 'game-over' && <StatusBar key="status-bar" />}
             </AnimatePresence>
             <motion.div
                 layout

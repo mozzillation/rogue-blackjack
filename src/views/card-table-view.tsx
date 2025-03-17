@@ -8,6 +8,7 @@ import { getNewCard, stand } from '@/store/actions/game-actions'
 import { useState } from 'react'
 import { cn } from '@/libs/utils'
 import { screenSpringOptions } from '@/libs/transitions'
+import Score from '@/components/score'
 
 const CardTableView = () => {
     const [isPlayerTurn, setPlayerTurn] = useState<boolean>(true)
@@ -35,24 +36,30 @@ const CardTableView = () => {
             exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
                 layout
-                className={`flex flex-row gap-4 w-full items-center content-center justify-center grow bg-zinc-700 rounded-xs`}>
+                className={`relative flex flex-row gap-4 w-full items-center content-center justify-center grow bg-zinc-700 rounded-xs`}>
                 <AnimatePresence mode="popLayout">
                     {level.dealer.hand.map((card, index) => (
                         <Card key={index} card={card} isHidden={isPlayerTurn && index === 1} />
                     ))}
                 </AnimatePresence>
+                <div className={`w-full absolute bottom-2 right-2 flex flex-row justify-end`}>
+                    <Score amount={level.dealer.score} isUnknown={isPlayerTurn} />
+                </div>
             </motion.div>
             {/* <div>{level.dealer.score}</div>
             <div>{level.player.score}</div> */}
 
             <motion.div
                 layout
-                className={`flex flex-row gap-4 w-full items-center content-center justify-center grow`}>
+                className={`flex flex-row gap-4 w-full items-center content-center justify-center grow relative`}>
                 <AnimatePresence mode="popLayout">
                     {level.player.hand.map((card, index) => (
                         <Card key={index} card={card} direction="down" />
                     ))}
                 </AnimatePresence>
+                <div className={`w-full absolute top-2 right-2 flex flex-row justify-end`}>
+                    <Score amount={level.player.score} />
+                </div>
             </motion.div>
 
             <AnimatePresence mode="popLayout">
