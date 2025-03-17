@@ -20,15 +20,19 @@ const EnemyIntroView = () => {
     if (!enemy) return <div>no enemy</div>
     return (
         <motion.div
-            className={`w-full h-full flex flex-col items-center content-center justify-between p-4 border-zinc-500 border-2 border-dotted overflow-hidden relative gap-4 bg-zinc-800`}
+            className={`w-full h-full flex flex-col items-center content-center justify-between relative gap-2`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: screenSpringOptions }}
             exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
-                className={`uppercase tracking-wide text-lg border-b-2 border-zinc-500 pb-4 border-dotted w-full text-center`}>
-                LEVEL #{index}
+                className={`to-zinc-700  from-black/0 bg-gradient-to-t overflow-hidden w-full h-full flex flex-col items-center content-center justify-center rounded-sm`}>
+                <motion.div
+                    className={`uppercase tracking-wide text-lg w-full h-fit absolute top-0 left-0 p-4 opacity-50 leading-none`}>
+                    LEVEL #{index}
+                </motion.div>
+                <EnemyCard enemy={enemy} key={`enemy-${index}`} />
             </motion.div>
-            <EnemyCard enemy={enemy} key={`enemy-${index}`} />
+
             <motion.div
                 className={`flex flex-row items-center content-center justify-center w-full`}>
                 <Button onClick={handleStartLevel}>CONTINUE</Button>

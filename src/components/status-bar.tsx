@@ -1,5 +1,6 @@
 'use client'
 
+import { screenSpringOptions } from '@/libs/transitions'
 import { cn } from '@/libs/utils'
 import { useAppSelector } from '@/store/hooks'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -34,9 +35,11 @@ const StatusBar = () => {
 
     return (
         <motion.header
+            layout
             className="h-auto relative"
             initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}>
+            animate={{ y: 0, opacity: 1, transition: screenSpringOptions }}
+            exit={{ y: -10, opacity: 0, transition: screenSpringOptions }}>
             <motion.div className="flex flex-row gap-2 relative">
                 {/* Coins Display */}
                 <motion.div
