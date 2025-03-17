@@ -7,12 +7,7 @@ import Button from '@/components/button'
 import { getNewCard, stand } from '@/store/actions/game-actions'
 import { useState } from 'react'
 import { cn } from '@/libs/utils'
-
-const ENTERING_SPRING_OPTIONS = {
-    stiffness: 800,
-    damping: 40,
-    mass: 1,
-}
+import { screenSpringOptions } from '@/libs/transitions'
 
 const CardTableView = () => {
     const [isPlayerTurn, setPlayerTurn] = useState<boolean>(true)
@@ -35,9 +30,9 @@ const CardTableView = () => {
         <motion.div
             className={`w-full h-full grow flex flex-col`}
             layout
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { type: 'spring', ...ENTERING_SPRING_OPTIONS } }}
-            exit={{ opacity: 0, transition: { type: 'spring', ...ENTERING_SPRING_OPTIONS } }}>
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0, transition: screenSpringOptions }}
+            exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
                 layout
                 className={`flex flex-row gap-4 w-full items-center content-center justify-center grow bg-zinc-700 rounded-xs`}>

@@ -8,6 +8,7 @@ const combinedReducers = combineReducers({
 export const makeStore = () => {
     return configureStore({
         reducer: combinedReducers,
+        devTools: process.env.NODE_ENV !== 'production',
     })
 }
 

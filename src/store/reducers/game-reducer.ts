@@ -2,6 +2,7 @@ import { deck } from '@/entities/deck'
 import { CombinedGameActionsType } from '../actions/game-actions'
 import { calculateScore } from '@/libs/math'
 import { produce } from 'immer'
+import { logOutcome } from '../utils/game-utils'
 
 const gameStatus = {
     IDLE: 'idle',
@@ -21,6 +22,14 @@ const levelStatus = {
 export type GameState = {
     status: (typeof gameStatus)[keyof typeof gameStatus]
     seed: null | string
+    history: {
+        outcomes: {
+            level: number
+            enemyName: string | undefined
+            playerScore: number
+            dealerScore: number
+        }[]
+    }
     level: {
         index: number
         enemy: null | Enemy
@@ -48,6 +57,9 @@ export type GameState = {
 const initialState: GameState = {
     seed: null,
     status: gameStatus.IDLE,
+    history: {
+        outcomes: [],
+    },
     level: {
         index: 0,
         enemy: null,
@@ -109,25 +121,31 @@ const gameReducer = (
                     // Blackjack → Instant win
                     draft.level.status = levelStatus.WON
                     draft.player.coins += 1
+                    draft.history.outcomes.push(logOutcome(draft))
                 } else if (player.score > 21) {
                     // Player busts → Lose
                     draft.level.status = levelStatus.LOST
                     draft.player.health -= 1
+                    draft.history.outcomes.push(logOutcome(draft))
                 } else if (dealer.score > 21) {
                     // Dealer busts → Win
                     draft.level.status = levelStatus.WON
                     draft.player.coins += 1
+                    draft.history.outcomes.push(logOutcome(draft))
                 } else if (player.score > dealer.score) {
                     // Higher score → Win
                     draft.level.status = levelStatus.WON
                     draft.player.coins += 1
+                    draft.history.outcomes.push(logOutcome(draft))
                 } else if (player.score < dealer.score) {
                     // Lower score → Lose
                     draft.level.status = levelStatus.LOST
                     draft.player.health -= 1
+                    draft.history.outcomes.push(logOutcome(draft))
                 } else {
                     // Tie (Push)
                     draft.level.status = levelStatus.TIE
+                    draft.history.outcomes.push(logOutcome(draft))
                 }
 
                 // Check for Game Over

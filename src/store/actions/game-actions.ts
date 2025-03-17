@@ -133,13 +133,17 @@ export const stand = () => (dispatch: AppDispatch, getState: () => RootState) =>
 
     const delayNext = () =>
         setTimeout(() => {
-            dispatch(hit('dealer'))
             dispatch(stand())
         }, timeout)
 
-    dispatch(tally())
+    const delayHit = () =>
+        setTimeout(() => {
+            dispatch(hit('dealer'))
+            dispatch(tally())
+        }, timeout)
 
     if (dealer.score < 20 && dealer.score < player.score) {
+        delayHit()
         delayNext()
     } else {
         dispatch(outcome())

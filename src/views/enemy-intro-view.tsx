@@ -2,15 +2,10 @@
 
 import Button from '@/components/button'
 import EnemyCard from '@/components/enemy-card'
+import { screenSpringOptions } from '@/libs/transitions'
 import { startLevel } from '@/store/actions/game-actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { motion } from 'motion/react'
-
-const ENTERING_SPRING_OPTIONS = {
-    stiffness: 800,
-    damping: 40,
-    mass: 1,
-}
 
 const EnemyIntroView = () => {
     const {
@@ -26,9 +21,9 @@ const EnemyIntroView = () => {
     return (
         <motion.div
             className={`w-full h-full flex flex-col items-center content-center justify-between p-4 border-zinc-500 border-2 border-dotted overflow-hidden relative gap-4 bg-zinc-800`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { ...ENTERING_SPRING_OPTIONS, type: 'spring' } }}
-            exit={{ opacity: 0, transition: { ...ENTERING_SPRING_OPTIONS, type: 'spring' } }}>
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0, transition: screenSpringOptions }}
+            exit={{ opacity: 0, y: -10, transition: screenSpringOptions }}>
             <motion.div
                 className={`uppercase tracking-wide text-lg border-b-2 border-zinc-500 pb-4 border-dotted w-full text-center`}>
                 LEVEL #{index}

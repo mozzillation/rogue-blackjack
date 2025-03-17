@@ -1,5 +1,7 @@
 'use client'
 
+import Button from '@/components/button'
+import { cn } from '@/libs/utils'
 import cryptoRandomString from 'crypto-random-string'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
@@ -19,9 +21,13 @@ const WelcomeView = () => {
     }
 
     return (
-        <button onClick={handleGenerateSeed} disabled={isPending}>
-            Start
-        </button>
+        <div
+            className={cn(
+                `w-full h-full flex flex-col items-center content-center justify-center transition-all`,
+                isPending && `pointer-events-none opacity-50 cursor-progress`,
+            )}>
+            <Button onClick={handleGenerateSeed}>Start</Button>
+        </div>
     )
 }
 

@@ -7,8 +7,10 @@ import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import EnemyIntroView from './enemy-intro-view'
 import CardTableView from '@/views/card-table-view'
-import OutcomeView from './outcome-win-view'
 import GameOverView from './game-over'
+import OutcomeWinView from './outcome-win-view'
+import OutcomeLostView from './outcome-lost-view'
+import OutcomeTieView from './outcome-tie-view'
 
 type GameViewProps = {
     seed: string
@@ -43,12 +45,16 @@ const GameView: React.FC<GameViewProps> = ({ seed }) => {
                 <AnimatePresence mode="wait">
                     {level.status === 'idle' && <EnemyIntroView key={`intro-${level.index}`} />}
                     {level.status === 'playing' && <CardTableView key={`round-${level.round}`} />}
-                    {status !== 'game-over' &&
-                        (level.status === 'won' ||
-                            level.status === 'tie' ||
-                            level.status === 'lost') && (
-                            <OutcomeView key={`outcome-${level.status}-${level.round}`} />
-                        )}
+                    {status !== 'game-over' && level.status === 'won' && (
+                        <OutcomeWinView key={`outcome-won-${level.round}`} />
+                    )}
+                    {status !== 'game-over' && level.status === 'lost' && (
+                        <OutcomeLostView key={`outcome-lost-${level.round}`} />
+                    )}
+                    {status !== 'game-over' && level.status === 'tie' && (
+                        <OutcomeTieView key={`outcome-tie-${level.round}`} />
+                    )}
+
                     {status === 'game-over' && <GameOverView />}
                 </AnimatePresence>
             </div>

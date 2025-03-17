@@ -39,7 +39,7 @@ body {
     background-size: 100% 4px;
 
     /* retro stuff */
-    text-shadow: 0 0 10px #000;
+    text-shadow: #111;
     mix-blend-mode: soft-light;
     opacity: 1;
 }
