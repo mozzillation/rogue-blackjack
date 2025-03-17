@@ -8,17 +8,18 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import cryptoRandomString from 'crypto-random-string'
 import { motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
-import { useTransition } from 'react'
+import { useMemo, useTransition } from 'react'
 
 const GameOverView = () => {
     const {
         seed,
-        history: { outcomes },
+        level: { index },
     } = useAppSelector((state) => state.game)
 
     const dispatch = useAppDispatch()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
+    const lastLevel = useMemo(() => index, []) // Runs only on first render
 
     const handleRetry = () => {
         startTransition(() => {
@@ -61,7 +62,7 @@ const GameOverView = () => {
                     className={`bg-rose-300 text-black text-xl p-2 rounded-xs border-2 border-black outline outline-rose-300/50 w-fit animate-pulse tracking-wider`}>
                     GAME OVER
                 </motion.h1>
-                <div>You reached level #{outcomes.length}</div>
+                <div>You reached level #{lastLevel}</div>
                 <div className={`flex flex-col items-center content-center opacity-50`}>
                     {/* <div>Your score: {latestOutcome?.playerScore}</div>
                     <div>
