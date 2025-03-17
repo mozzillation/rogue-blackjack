@@ -1,8 +1,13 @@
 'use client'
 
-import 'ios-vibrator-pro-max'
+import { useEffect } from 'react'
 
 const ScreenView: React.FC<React.PropsWithChildren> = ({ children }) => {
+    useEffect(() => {
+        import('ios-vibrator-pro-max').catch((err) =>
+            console.error('Failed to load vibration library:', err),
+        )
+    }, [])
     return (
         <div
             className={`min-h-svh min-w-svw h-full w-full relative flex items-center content-center justify-center select-none bg-zinc-800`}>

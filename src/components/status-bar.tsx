@@ -40,7 +40,7 @@ const StatusBar = () => {
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1, transition: screenSpringOptions }}
             exit={{ y: -10, opacity: 0, transition: screenSpringOptions }}>
-            <motion.div className="flex flex-row gap-2 relative">
+            <motion.div className="flex flex-row gap-2 relative" layout>
                 {/* Coins Display */}
                 <motion.div
                     layout

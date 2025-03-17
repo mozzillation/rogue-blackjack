@@ -65,16 +65,25 @@ const CardTableView = () => {
             <AnimatePresence mode="popLayout">
                 {isPlayerTurn && (
                     <motion.div
-                        className={cn(
-                            `flex flex-row gap-2 transition-all`,
-                            level.isProcessing && `opacity-50 pointer-events-none cursor-progress`,
-                        )}
-                        exit={{ opacity: 0, y: 100 }}
+                        className={cn(`flex flex-row gap-2`)}
+                        exit={{ opacity: 0, y: 50, transition: screenSpringOptions }}
                         layout>
-                        <Button onClick={handleHit} className={`w-full`}>
+                        <Button
+                            onClick={handleHit}
+                            className={cn(
+                                `w-full`,
+                                level.isProcessing &&
+                                    `opacity-50 pointer-events-none cursor-progress`,
+                            )}>
                             HIT
                         </Button>
-                        <Button onClick={handleStand} className={`w-full`}>
+                        <Button
+                            onClick={handleStand}
+                            className={cn(
+                                `w-full transition-all`,
+                                level.isProcessing &&
+                                    `opacity-50 pointer-events-none cursor-progress`,
+                            )}>
                             STAND
                         </Button>
                     </motion.div>
