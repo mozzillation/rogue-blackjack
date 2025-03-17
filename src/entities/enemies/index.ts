@@ -8,7 +8,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     goblin: {
         health: 1,
         modifiers: {
-            malus: { type: 'lose-health', amount: 2 },
+            malus: null,
         },
         names: [
             'Sneaky Pete',
@@ -31,7 +31,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     skeleton: {
         health: 1,
         modifiers: {
-            malus: { type: 'lose-health', amount: 2 },
+            malus: null,
         },
         names: [
             'Rattles',
@@ -54,7 +54,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     slime: {
         health: 1,
         modifiers: {
-            malus: { type: 'lose-all-coins' },
+            malus: { type: 'lose-coins', amount: 2 },
         },
         names: [
             'Gloopy',
@@ -77,7 +77,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     ghost: {
         health: 1,
         modifiers: {
-            malus: { type: 'instant-game-over' },
+            malus: null,
         },
         names: [
             'Whisper',
@@ -100,7 +100,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     robot: {
         health: 2,
         modifiers: {
-            malus: null,
+            malus: { type: 'instant-game-over' },
         },
         names: [
             'Unit-X1',
@@ -123,7 +123,7 @@ const enemyRawData: Record<EnemyType, EnemyRawEntry> = {
     orc: {
         health: 3,
         modifiers: {
-            malus: { type: 'lose-coins', amount: 3 },
+            malus: { type: 'lose-all-coins' },
         },
         names: [
             'Groknak the Destroyer',

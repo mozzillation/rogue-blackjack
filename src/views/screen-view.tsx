@@ -1,5 +1,7 @@
 'use client'
 
+import 'ios-vibrator-pro-max'
+
 const ScreenView: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
         <div

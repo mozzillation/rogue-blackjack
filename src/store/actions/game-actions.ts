@@ -142,7 +142,7 @@ export const stand = () => (dispatch: AppDispatch, getState: () => RootState) =>
             dispatch(tally())
         }, timeout)
 
-    if (dealer.score < 20 && dealer.score < player.score) {
+    if (dealer.score < 18 && dealer.score < player.score) {
         delayHit()
         delayNext()
     } else {
