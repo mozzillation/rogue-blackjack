@@ -123,30 +123,23 @@ export const outcome = () => (dispatch: AppDispatch) => {
 export const hit = (who: 'player' | 'dealer') => (dispatch: AppDispatch) => {
     dispatch({ type: 'HIT', payload: { who } })
 }
-
 export const stand = () => (dispatch: AppDispatch, getState: () => RootState) => {
     const {
-        level: { player, dealer },
+        level: { dealer },
     } = getState().game
-
     const timeout = 1000
-
-    const delayNext = () =>
-        setTimeout(() => {
-            dispatch(stand())
-        }, timeout)
 
     const delayHit = () =>
         setTimeout(() => {
             dispatch(hit('dealer'))
             dispatch(tally())
+            dispatch(stand()) // Continue until dealer reaches at least 17
         }, timeout)
 
-    if (dealer.score < 18 && dealer.score < player.score) {
-        delayHit()
-        delayNext()
+    if (dealer.score < 17) {
+        delayHit() // Keep hitting until at least 17
     } else {
-        dispatch(outcome())
+        dispatch(outcome()) // End the round
     }
 }
 
