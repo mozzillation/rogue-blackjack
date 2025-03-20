@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import StoreProvider from '@/utils/store/provider'
+import ScreenView from '@/views/screen-view'
 
 const pixelFont = localFont({ src: '../fonts/munro.ttf' })
 
@@ -21,7 +22,9 @@ const RootLayout: React.FC<Readonly<RootLayoutProps>> = ({ children }) => {
     return (
         <html lang="en">
             <body className={`${pixelFont.className} antialiased`}>
-                <StoreProvider>{children}</StoreProvider>
+                <StoreProvider>
+                    <ScreenView>{children}</ScreenView>
+                </StoreProvider>
             </body>
         </html>
     )

@@ -5,7 +5,7 @@
     --foreground: #fff;
     --white: #fff;
 
-    --accent: oklch(94.83% 0.0769 115.71);
+    --accent: oklch(86.03% 0.1027 116.23);
 }
 
 @theme inline {
@@ -34,13 +34,13 @@ body {
 
 .crt {
     /* scanlines */
-    background: linear-gradient(to top, #555, #111, #111, #555);
+    background: linear-gradient(to top, #ddd, #000, #000, #ddd);
     background-size: cover;
-    background-size: 100% 4px;
+    background-size: 100% 2px;
 
     /* retro stuff */
     text-shadow: #111;
-    mix-blend-mode: soft-light;
+    mix-blend-mode: color-dodge;
     opacity: 1;
 }
 

@@ -6,6 +6,7 @@ enum MonsterType {
     Robot = 'robot',
     Orc = 'orc',
     Apex = 'apex',
+    Human = 'human',
 }
 
 enum Rarity {

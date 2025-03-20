@@ -3,6 +3,14 @@ import { getRandomMonster } from '@/utils/helpers/randomizer'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '..'
 
+enum GameView {
+    INTRO = 'intro',
+    TABLE = 'table',
+    OUTCOME = 'outcome',
+    GAMEOVER = 'gameover',
+    SHOP = 'shop',
+}
+
 enum GameStage {
     IDLE = 'idle',
     DEALING = 'dealing',
@@ -10,7 +18,14 @@ enum GameStage {
     PLAYING = 'playing',
     HITTING = 'hitting',
     STANDING = 'standing',
-    OUTCOME = 'outcome',
+    OUTCOMING = 'outcoming',
+}
+
+enum GameOutcome {
+    WON = 'won',
+    LOST = 'lost',
+    TIE = 'tie',
+    BLACKJACK = 'blackjack',
 }
 
 type PlayerStats = {
@@ -20,7 +35,9 @@ type PlayerStats = {
 
 // Define initial state for the monsters
 type GameState = {
+    dungeon: MonsterWithDetails[]
     level: number
+    view: GameView
     monster: MonsterWithDetails | null
     stage: GameStage | null
     deck: Card[]
@@ -30,10 +47,13 @@ type GameState = {
     }
     player: PlayerStats
     dealer: PlayerStats
+    outcome: GameOutcome | null
 }
 
 const initialState: GameState = {
+    dungeon: [],
     level: 0,
+    view: GameView.INTRO,
     monster: null,
     session: {
         health: 3,
@@ -49,12 +69,22 @@ const initialState: GameState = {
         score: 0,
         hand: [],
     },
+    outcome: null,
 }
+
+export const generateSession = createAsyncThunk(
+    'game/generateSession',
+    async (monsters: MonsterWithDetails[], { dispatch }) => {
+        dispatch(gameSlice.actions.seedSession(monsters))
+        dispatch(gameSlice.actions.nextLevel())
+    },
+)
 
 // Define an async thunk
 export const dealNewLevel = createAsyncThunk(
     'game/dealNewLevel',
     async (_, { dispatch, getState }) => {
+        dispatch(gameSlice.actions.updateView(GameView.TABLE))
         dispatch(gameSlice.actions.deal())
         dispatch(gameSlice.actions.tally())
 
@@ -70,11 +100,17 @@ export const dealNewLevel = createAsyncThunk(
             }, timeout)
         }
 
+        const delayUpdateStage = () => {
+            setTimeout(() => {
+                dispatch(gameSlice.actions.updateStage(GameStage.PLAYING))
+            }, timeout)
+        }
+
         if (player.score === 21) {
             // Blackjack
             delayStand()
         } else {
-            dispatch(gameSlice.actions.updateStage(GameStage.PLAYING))
+            delayUpdateStage()
         }
     },
 )
@@ -103,11 +139,19 @@ export const handlePlayerHit = createAsyncThunk(
             }, timeout)
         }
 
+        const delayUpdateStage = () => {
+            setTimeout(() => {
+                dispatch(gameSlice.actions.updateStage(GameStage.PLAYING))
+            }, timeout / 2)
+        }
+
         if (player.score === 21) {
             // Blackjack
             delayStand()
         } else if (player.score > 21) {
             delayOutcome()
+        } else {
+            delayUpdateStage()
         }
     },
 )
@@ -145,39 +189,11 @@ export const handlePlayerStand = createAsyncThunk(
     },
 )
 
-// export const stand = () => (dispatch: AppDispatch, getState: () => RootState) => {
-//     const {
-//         level: { dealer, player },
-//     } = getState().game
-//     const timeout = 1000
-
-//     const delayHit = () =>
-//         setTimeout(() => {
-//             dispatch(hit('dealer'))
-//             dispatch(tally())
-//             dispatch(stand()) // Continue until dealer reaches at least 17
-//         }, timeout)
-
-//     if (dealer.score < 17 && dealer.score < player.score) {
-//         delayHit() // Keep hitting until at least 17
-//     } else {
-//         dispatch(outcome()) // End the round
-//     }
-// }
-
 // Create slice
 const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        playNextLevel: (state, action: PayloadAction<MonsterWithDetails[]>) => {
-            state.level = 1
-            state.stage = GameStage.IDLE
-            state.monster = getRandomMonster(action.payload)
-            state.session.coins = 3
-            state.session.health = 3
-            state.deck = createDeck()
-        },
         deal: (state) => {
             const [playerCard1, dealerCard1, playerCard2, dealerCard2] = state.deck
 
@@ -205,7 +221,70 @@ const gameSlice = createSlice({
             state.stage = GameStage.STANDING
         },
         outcome: (state) => {
-            state.stage = GameStage.OUTCOME
+            state.stage = GameStage.OUTCOMING
+
+            if (state.player.score === 21 && state.dealer.score !== 21) {
+                // Blackjack → Special win
+                state.outcome = GameOutcome.BLACKJACK
+                state.session.coins += 3
+                state.session.health += 1
+            } else if (state.player.score > 21) {
+                // Player busts → Lose
+                state.outcome = GameOutcome.LOST
+                state.session.health -= 1
+            } else if (state.dealer.score > 21) {
+                // Dealer busts → Win
+                state.outcome = GameOutcome.WON
+                state.session.coins += 1
+            } else if (state.player.score > state.dealer.score) {
+                // Higher score → Win
+                state.outcome = GameOutcome.WON
+                state.session.coins += 1
+            } else if (state.player.score < state.dealer.score) {
+                // Lower score → Lose
+                state.outcome = GameOutcome.LOST
+                state.session.health -= 1
+            } else {
+                // Tie (Push)
+                state.outcome = GameOutcome.TIE
+            }
+
+            // Check for Game Over
+            if (state.session.health <= 0) {
+                state.view = GameView.GAMEOVER
+            } else {
+                state.view = GameView.OUTCOME
+            }
+        },
+        seedSession: (state, action: PayloadAction<MonsterWithDetails[]>) => {
+            state.dungeon = action.payload
+            state.level = 0
+            state.session.coins = 3
+            state.session.health = 3
+        },
+        retry: (state) => {
+            state.level = 1
+            state.stage = GameStage.IDLE
+            state.view = GameView.INTRO
+            state.monster = getRandomMonster(state.dungeon)
+            state.deck = createDeck()
+            state.outcome = null
+            state.session.coins = 3
+            state.session.health = 3
+        },
+        nextLevel: (state) => {
+            state.level += 1
+            state.stage = GameStage.IDLE
+            state.view = GameView.INTRO
+            state.monster = getRandomMonster(state.dungeon)
+            state.deck = createDeck()
+            state.outcome = null
+        },
+        visitShop: (state) => {
+            state.view = GameView.SHOP
+        },
+        updateView: (state, action: PayloadAction<GameView>) => {
+            state.view = action.payload
         },
         updateStage: (state, action: PayloadAction<GameStage>) => {
             state.stage = action.payload
@@ -213,7 +292,19 @@ const gameSlice = createSlice({
     },
 })
 
-export const { playNextLevel, deal, hit, outcome, tally, stand } = gameSlice.actions
+export const {
+    deal,
+    hit,
+    outcome,
+    tally,
+    stand,
+    updateView,
+    updateStage,
+    seedSession,
+    nextLevel,
+    visitShop,
+    retry,
+} = gameSlice.actions
 
 const gameReducer = gameSlice.reducer
 
